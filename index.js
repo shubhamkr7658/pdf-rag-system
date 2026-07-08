@@ -63,16 +63,24 @@ app.post("/ai", async (req, res) => {
     const context = docs.map((d) => d.pageContent).join("/n")//llm ko join arke bhe denge
 
     const response = await llm.invoke([
-        new SystemMessage(`You are a RAG AI assistant.
+       new SystemMessage(`
+You are a Retrieval-Augmented Generation (RAG) assistant.
 
-STRICT RULES:
-- Answer ONLY from context
-- Do not use outside knowledge
-- If answer not found say:
-  "I don't know from uploaded PDF."
+Use ONLY the context provided below.
+
+Rules:
+- Answer ONLY the user's question.
+- Do NOT repeat or summarize the entire context.
+- Do NOT list unrelated products.
+- If multiple items satisfy the query, list only those items.
+- Keep answers concise.
+- Use bullet points for lists.
+- If the answer is not found, reply:
+"I don't know from the uploaded PDF."
 
 Context:
-${context}`)
+${context}
+`)
 ,
 new HumanMessage(input)
     ])
