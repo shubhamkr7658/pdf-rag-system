@@ -55,7 +55,7 @@ const vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
 });
 
  const upload= async()=>{
-    const pdfpath="./knowledge.pdf"
+    const pdfpath="./sample.pdf"
     const buffer=fs.readFileSync(pdfpath)
    
     const pdfresult=new PDFParse({data:buffer})
