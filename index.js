@@ -19,13 +19,22 @@ app.use(express.json())
 
 import { ChatOpenAI } from "@langchain/openai";
 
-const llm = new ChatOpenAI({
+import { ChatGroq } from "@langchain/groq"
+
+const llm = new ChatGroq({
+    model: "llama-3.3-70b-versatile",
+    temperature: 0.7,
+    maxTokens: 100,
+    maxRetries: 2
+})
+
+/*const llm = new ChatOpenAI({
   model: "qwen/qwen3-4b-2507",
   apiKey: "lm-studio", // koi bhi string
   configuration: {
     baseURL: "http://127.0.0.1:1234/v1",
   },
-});
+});*/
 
 
 const embeddings = new GoogleGenerativeAIEmbeddings({
