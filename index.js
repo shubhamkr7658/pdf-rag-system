@@ -75,7 +75,13 @@ app.post("/ai", async (req, res) => {
     const { input } = req.body
 
     const docs = await vectorStore.similaritySearch(input, 5)
-    const context = docs.map((d) => d.pageContent).join("/n")//llm ko join arke bhe denge
+   const context = docs
+  .map((d) =>
+    d.pageContent
+      .replace(/■(?=\d)/g, "₹")   // ■220 -> ₹220
+      .replace(/\bn(?=\d)/g, "₹") // n220 -> ₹220
+  )
+  .join("\n\n");//llm ko join arke bhe denge
 
     const response = await llm.invoke([
        new SystemMessage(`
