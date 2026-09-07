@@ -1,5 +1,6 @@
 import express from "express"
 import dotenv from "dotenv"
+import { ChatGoogleGenerativeAI } from "@langchain/google-genai";
 
 import fs from "fs"
 import { PDFParse } from "pdf-parse"//text ko extract jarna
@@ -25,14 +26,13 @@ app.use(express.json());
 
 import { ChatOpenAI } from "@langchain/openai";
 
-import { ChatGroq } from "@langchain/groq"
 
-const llm = new ChatGroq({
-    model: "Gemini 3.8 Flash",
+const llm = new ChatGoogleGenerativeAI({
+    model: "gemini-3.8-flash",
     temperature: 0.7,
-    maxTokens: 100,
-    maxRetries: 2
-})
+    maxOutputTokens: 500,
+    maxRetries: 2,
+});
 
 /*const llm = new ChatOpenAI({
   model: "qwen/qwen3-4b-2507",
@@ -55,7 +55,7 @@ const vectorStore = await QdrantVectorStore.fromExistingCollection(embeddings, {
 });
 
  const upload= async()=>{
-    const pdfpath="./sample.pdf"
+    const pdfpath="./knowledge.pdf"
     const buffer=fs.readFileSync(pdfpath)
    
     const pdfresult=new PDFParse({data:buffer})
@@ -75,13 +75,7 @@ app.post("/ai", async (req, res) => {
     const { input } = req.body
 
     const docs = await vectorStore.similaritySearch(input, 5)
-   const context = docs
-  .map((d) =>
-    d.pageContent
-      .replace(/■(?=\d)/g, "₹")   // ■220 -> ₹220
-      .replace(/\bn(?=\d)/g, "₹") // n220 -> ₹220
-  )
-  .join("\n\n");//llm ko join arke bhe denge
+    const context = docs.map((d) => d.pageContent).join("/n")//llm ko join arke bhe denge
 
     const response = await llm.invoke([
        new SystemMessage(`
