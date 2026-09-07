@@ -28,7 +28,7 @@ import { ChatOpenAI } from "@langchain/openai";
 import { ChatGroq } from "@langchain/groq"
 
 const llm = new ChatGroq({
-    model: "llama-3.3-70b-versatile",
+    model: "Gemini 3.8 Flash",
     temperature: 0.7,
     maxTokens: 100,
     maxRetries: 2
